@@ -1,6 +1,6 @@
 {
   "name": "heapanalytics-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Zero-dependency client for HEAP-analytics based on Fetch API",
   "main": "index.js",
   "scripts": {

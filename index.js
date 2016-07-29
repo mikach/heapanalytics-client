@@ -7,6 +7,11 @@ export default class HeapClient {
         this.appId = id
     }
 
+    setIdentity(identity) {
+        this.identity = identity
+        return this
+    }
+
     postJSON(url, json) {
         return fetch(url, {
             method: 'POST',
@@ -14,7 +19,12 @@ export default class HeapClient {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(json),
-        }).then((response) => response.text())
+        }).then((response) => response.text()).then((text) => {
+            if (text !== 'OK') {
+                return new Error(text)
+            }
+            return text
+        })
     }
 
     track(identity, event, properties) {
@@ -23,12 +33,11 @@ export default class HeapClient {
             identity,
             event,
             properties,
-        }).then((text) => {
-            if (text !== 'OK') {
-                return new Error(text)
-            }
-            return text
         })
+    }
+
+    trackEvent(event, properties) {
+        return this.track(this.identity, event, properties)
     }
 
     addUserProperties(identity, properties) {
@@ -36,11 +45,6 @@ export default class HeapClient {
             app_id: this.appId,
             identity,
             properties,
-        }).then((text) => {
-            if (text !== 'OK') {
-                return new Error(text)
-            }
-            return text
         })
     }
 }
